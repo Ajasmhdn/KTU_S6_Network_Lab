@@ -1,0 +1,47 @@
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+#include <arpa/inet.h>
+#include <sys/socket.h>
+
+#define PORT 5000
+#define MAX_SEQ_NUM 8
+
+typedef struct { int seq_num; char data[100]; } Packet;
+
+int main() {
+    int sockfd, next_seq_num = 0, exp_ack_num = 0;
+    struct sockaddr_in servaddr;
+
+    sockfd = socket(AF_INET, SOCK_DGRAM, 0);
+    servaddr.sin_family = AF_INET;
+    servaddr.sin_port = htons(PORT);
+    inet_pton(AF_INET, "127.0.0.1", &servaddr.sin_addr);
+
+    Packet pkt, ack_pkt;
+
+    char choice;
+
+    do {
+        pkt.seq_num = next_seq_num;
+        sprintf(pkt.data, "Packet %d", next_seq_num);
+        sendto(sockfd, &pkt, sizeof(pkt), 0, (struct sockaddr*)&servaddr, sizeof(servaddr));
+
+        recvfrom(sockfd, &ack_pkt, sizeof(ack_pkt), 0, NULL, NULL);
+
+        if (ack_pkt.seq_num == exp_ack_num) {
+            printf("Received ack for packet %d\n", exp_ack_num);
+            next_seq_num = (next_seq_num + 1) % MAX_SEQ_NUM;
+            exp_ack_num = (exp_ack_num + 1) % MAX_SEQ_NUM;
+        } else {
+            printf("Received duplicate ack or out-of-order ack. Ignoring.\n");
+        }
+
+        printf("Continue? (y/n): ");
+        scanf(" %c", &choice);
+    } while (choice == 'y' || choice == 'Y');
+
+    close(sockfd);
+
+    return 0;
+}
