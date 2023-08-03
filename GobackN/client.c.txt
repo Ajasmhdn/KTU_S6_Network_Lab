@@ -1,0 +1,124 @@
+#include <stdio.h>
+
+#include <stdlib.h>
+
+#include <string.h>
+
+#include <unistd.h>
+
+#include <arpa/inet.h>
+
+
+
+#define WINDOW_SIZE 4
+
+
+
+typedef struct {
+
+    int seq_number;
+
+    char data[256];
+
+} Packet;
+
+
+
+void send_packets(int sockfd, struct sockaddr_in *dest_addr) {
+
+    Packet buffer[WINDOW_SIZE];
+
+    int next_seq = 0;
+
+    int base = 0;
+
+    int num_packets = 0;
+
+
+
+    while (1) {
+
+        if (next_seq < base + WINDOW_SIZE) {
+
+            Packet packet = {next_seq, ""};
+
+            sprintf(packet.data, "Packet %d", next_seq);
+
+
+
+            buffer[next_seq % WINDOW_SIZE] = packet;
+
+            sendto(sockfd, &packet, sizeof(Packet), 0, (struct sockaddr *)dest_addr, sizeof(*dest_addr));
+
+            next_seq++;
+
+            num_packets++;
+
+
+
+            if (next_seq == WINDOW_SIZE) {
+
+                next_seq = 0;
+
+            }
+
+        } else {
+
+            int ack;
+
+            recvfrom(sockfd, &ack, sizeof(int), 0, NULL, NULL);
+
+
+
+            while (base != ack) {
+
+                base++;
+
+                if (base == WINDOW_SIZE) {
+
+                    base = 0;
+
+                }
+
+                num_packets--;
+
+            }
+
+        }
+
+
+
+        if (num_packets == 0) {
+
+            break;
+
+        }
+
+    }
+
+}
+
+
+
+int main() {
+
+    int sockfd;
+
+    struct sockaddr_in server_addr = {AF_INET, htons(12345), inet_addr("127.0.0.1")};
+
+
+
+    sockfd = socket(AF_INET, SOCK_DGRAM, 0);
+
+
+
+    send_packets(sockfd, &server_addr);
+
+
+
+    close(sockfd);
+
+    return 0;
+
+}
+

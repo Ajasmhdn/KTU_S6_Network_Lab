@@ -1,0 +1,49 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <arpa/inet.h>
+
+#define WINDOW_SIZE 4
+#define MAX_PACKETS 10
+
+typedef struct {
+    int seq_number;
+    char data[256];
+} Packet;
+
+void receive_packets(int sockfd) {
+    int expected_seq = 0;
+    Packet buffer[MAX_PACKETS];
+
+    while (1) {
+        Packet packet;
+        int len = recv(sockfd, &packet, sizeof(Packet), 0);
+
+        if (len == sizeof(Packet) && packet.seq_number >= expected_seq && packet.seq_number < expected_seq + WINDOW_SIZE) {
+            buffer[packet.seq_number % MAX_PACKETS] = packet;
+
+            while (buffer[expected_seq % MAX_PACKETS].seq_number == expected_seq) {
+                printf("Received packet with sequence number: %d\n", expected_seq);
+                expected_seq++;
+            }
+
+            int ack = expected_seq - 1;
+            send(sockfd, &ack, sizeof(int), 0);
+        }
+    }
+}
+
+int main() {
+    int sockfd;
+    struct sockaddr_in server_addr = {AF_INET, htons(12345), {INADDR_ANY}};
+
+    sockfd = socket(AF_INET, SOCK_DGRAM, 0);
+    bind(sockfd, (struct sockaddr *)&server_addr, sizeof(server_addr));
+
+    printf("Waiting for client connection...\n");
+    receive_packets(sockfd);
+
+    close(sockfd);
+    return 0;
+}
