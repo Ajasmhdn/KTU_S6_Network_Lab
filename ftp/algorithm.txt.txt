@@ -1,0 +1,26 @@
+Server 
+
+
+Create a socket using socket() function.
+Set up the server address structure with IP address INADDR_ANY and the desired port number.
+Bind the socket to the server address using bind() function.
+Listen for incoming connections using listen() function.
+Accept a new client connection using accept() function, creating a new socket for communication with the client.
+Read the filename from the client using read() function.
+Open the file for reading using fopen().
+Read the file line by line using fgets() and send each line to the client using write() function.
+Close the file and close the socket for the client connection.
+The server program exits.
+
+FTP Client:
+
+Create a socket using socket() function.
+Set up the server address structure with the server's IP address (in this case, 127.0.0.1 for localhost) and the desired port number.
+Connect to the server using connect() function.
+Prepare the filename to be sent to the server (in this case, "file.txt").
+Send the filename to the server using write() function.
+Receive data from the server in a loop using read() function.
+Print the received data to the console.
+Continue receiving and printing until there is no more data from the server.
+Close the socket.
+The client program exits.

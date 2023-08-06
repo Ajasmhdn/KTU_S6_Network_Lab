@@ -1,0 +1,25 @@
+Stop-and-Wait Protocol:
+
+Sender (Client):
+
+1.Create a socket for UDP communication.
+2.Initialize the server address structure with the server's IP, port, and address family.
+3.Read data from a file or user input to be sent to the receiver.
+4.Divide the data into frames of fixed size (or use a delimiter to separate frames).
+5.Send the first frame to the receiver.
+6.Start a timer to wait for an acknowledgment from the receiver.
+7.Wait for an acknowledgment from the receiver:
+a. If an acknowledgment is received within the timeout period:
+	If it's a positive acknowledgment (ACK), move to the next frame and go to step 5.
+	If it's a negative acknowledgment (NAK), re-send the current frame and go to step 6.
+b. If no acknowledgment is received within the timeout period, re-send the current frame and go to step 6.
+
+Receiver (Server):
+
+1.Create a socket for UDP communication.
+2.Initialize the server address structure with IP, port, and address family.
+3.Wait for incoming frames from the sender.
+4.Upon receiving a frame, check if it's the expected frame:
+a. If it's the expected frame, send a positive acknowledgment (ACK) to the sender and deliver the data to the upper layer.
+b. If it's not the expected frame, send a negative acknowledgment (NAK) to the sender and discard the frame.
+5.Wait for the next frame and go to step 4.

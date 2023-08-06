@@ -1,0 +1,42 @@
+Server (Receiver):
+
+
+Create a socket to listen for incoming packets.
+
+Initialize the expected sequence number to 0.
+
+Create a buffer to hold received packets.
+
+Continuously:
+
+a. Receive a packet from the client.
+
+b. If the packet's sequence number is within the expected range, store it in the buffer.
+
+c. If the next expected packet is available in the buffer, process it and acknowledge it.
+
+d. Send the acknowledgment (ACK) back to the client.
+
+Close the socket and exit.
+
+
+
+Client (Sender):
+
+
+
+Create a socket to send packets to the server.
+
+Initialize the next sequence number and base of the window to 0.
+
+Create a buffer to hold packets.
+
+Continuously:
+
+a. If there is space in the window, create a packet and send it to the server.
+
+b. If the window is full or there's no space, wait for an acknowledgment from the server.
+
+c. On receiving an acknowledgment, slide the window and update the next sequence number.
+
+Close the socket and exit.

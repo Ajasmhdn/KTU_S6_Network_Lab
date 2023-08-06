@@ -1,0 +1,21 @@
+Sure, here's the algorithm for the Link State Protocol in simple words:
+
+Input the number of nodes in the network (n) and the cost between each pair of nodes.
+
+Initialize the distance of each node to a very large value and mark all nodes as unvisited.
+
+Set the distance of the source node to 0.
+
+Repeat the following steps n-1 times:
+
+a. Find the node with the minimum distance among the unvisited nodes.
+
+b. Mark that node as visited.
+
+c. Update the distance of all unvisited neighbors if a shorter path is found, and remember the previous node on the path.
+
+Print the routing table for the source node, showing the cost to reach each node and the next hop.
+
+Print the cost of the shortest path from the source node to each destination node.
+
+End the program.

@@ -1,0 +1,21 @@
+UDP Server Algorithm:
+
+1.Create a socket using IPv4 and UDP.
+2.Set up the server address to bind the socket to any available network interface and the specified PORT.
+3.Bind the socket to the server address.
+4.Receive data from the client.
+5.Print the received message from the client.
+6.Ask the user to enter the response message.
+7.Send the response message back to the client.
+8.Close the socket and finish the server.
+
+
+UDP Client Algorithm:
+
+1.Create a socket using IPv4 and UDP.
+2.Set up the server address with the server IP (127.0.0.1) and the specified PORT.
+3.Ask the user to enter the message to send.
+4.Send the message to the server.
+5.Receive the response from the server.
+6.Print the response from the server.
+7.Close the socket and finish the client.

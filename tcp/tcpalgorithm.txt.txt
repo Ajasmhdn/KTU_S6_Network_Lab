@@ -1,0 +1,29 @@
+Server:
+
+1.Create a socket to listen for incoming connections.
+
+2.Bind the socket to a specific IP address and port number.
+
+3.Start listening for incoming connections from clients.
+
+4.When a client connects, accept the connection and create a new socket for communication with that client.
+
+5.Receive data from the client over the new socket.
+
+6.Print the received data.
+
+7.Close the new socket and go back to listening for more connections.
+
+Client:
+
+1.Create a socket.
+
+2.Specify the IP address and port number of the server to connect to.
+
+3.Connect to the server using the specified IP address and port.
+
+4.Prompt the user to enter data to send to the server.
+
+5.Send the data to the server.
+
+6.Close the socket.
